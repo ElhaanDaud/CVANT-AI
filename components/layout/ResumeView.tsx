@@ -11,6 +11,8 @@ import PageWrapper from "@/components/common/PageWrapper";
 import { DownloadIcon, Share2Icon } from "lucide-react";
 import { fetchResume } from "@/lib/actions/resume.actions";
 import html2pdf from "html2pdf.js";
+import ResumeDownloader from "../layout/my-resume/ResumeDownloader";
+import { getFileViewUrl } from "@/lib/appwrite";
 
 interface FinalResumeViewProps {
   params: { id: string };
@@ -117,6 +119,16 @@ const FinalResumeView: React.FC<FinalResumeViewProps> = ({
                   </Button>
                 </RWebShare>
               </div>
+              {isOwnerView && formData?.uploadedResume?.fileId && (
+                <div className="mt-4">
+                  <h3 className="text-center text-lg font-semibold">
+                    Uploaded Resume
+                  </h3>
+                  <div className="mt-2">
+                    <ResumeDownloader fileInfo={formData.uploadedResume} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="px-10 pt-4 pb-16 max-sm:px-5 max-sm:pb-8 print:p-0">
