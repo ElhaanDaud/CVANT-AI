@@ -1,6 +1,5 @@
 <div align="center">
 
-  <br />
 
   <div>
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=393D72" alt="nextjs" />
@@ -10,93 +9,48 @@
     <img src="https://img.shields.io/badge/-Typescript-black?style=for-the-badge&logoColor=white&logo=typescript&color=387CC8" alt="typescript" />
   </div>
 
-  <h2 align="center">ResumeAI</h2>
+  <h2 align="center">CVANT AI</h2>
 
   <div align="center">
-     <b>ResumeAI</b> is designed to make resume creation effortless. With the help of AI, users can generate, update, and customize their resumes, ensuring they stand out to potential employers. The application is secure, user-friendly, and highly customizable.
+     <b>CVANT AI</b> is your one-stop CV enhancer! With AI magic under the hood, it lets you generate, update, and tailor your resume like a pro. Whether you're a fresher or a seasoned professional, this tool helps you put your best foot forward — quickly, securely, and smartly.
   </div>
   <br />
-</div>
 
-## <a name="features">✨ Features</a>
 
-- **AI-Powered Resume Generation:** Generate a professional resume using AI.
+---
 
-- **User Authentication:** Secure login and registration with Clerk.
+## ✨ Features
 
-- **Real-Time Preview:** See live updates as you fill out the resume form.
+- **AI-Powered Resume Generation:** Create professional resumes using powerful AI tools.
+- **CV Enhancer Mode:** Upload an existing resume and enhance it with AI-driven suggestions.
+- **User Authentication:** Secure login and registration powered by Clerk.
+- **Real-Time Preview:** Instantly see what your resume will look like as you edit.
+- **Easy Customization:** Add or modify experience, education, skills, projects, hobbies, and more.
+- **Save and Share:** Generate shareable links for your resume.
+- **Responsive Design:** Mobile-first and fully responsive layout for every screen size.
 
-- **Easy Customization:** Edit sections like experience, education, skills, and more.
+---
 
-- **Save and Share:** Save your resume and share a link with potential employers.
+## ⚙️ Tech Stack
 
-- **Responsiveness:** Ensures the application adapts seamlessly to various screen sizes and devices.
+- **Frontend:** Next.js 14  
+- **Authentication:** Clerk  
+- **AI Integration:** Gemini API  
+- **Styling:** TailwindCSS  
+- **Backend:** Node.js  
+- **Database:** MongoDB  
 
-## <a name="tech-stack">⚙️ Tech Stack</a>
+---
 
-- **Frontend:** Next.js 14
+## 🚀 Quick Start
 
-- **Authentication:** Clerk
-
-- **AI Integration:** Gemini API
-
-- **Styling:** TailwindCSS
-
-- **Backend:** Node.js
-
-- **Database:** MongoDB
-
-## <a name="quick-start">🚀 Quick Start</a>
-
-Follow these steps to set up the project locally on your machine.
+Follow these steps to run CVANT AI locally on your machine.
 
 ### Prerequisites
 
-Make sure you have the following installed on your machine:
+Make sure you have the following installed:
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/en)
-- [npm](https://www.npmjs.com/) (Node Package Manager)
-
-### Cloning the Repository
-
-```bash
-git clone https://github.com/Mahmud0808/ResumeAI.git
-cd ResumeAI
-```
-
-### Installation
-
-Install the project dependencies using npm:
-
-```bash
-npm install
-```
-
-### Set Up Environment Variables
-
-Create a new file named `.env` in the root of your project and add the following content:
-
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-MONGODB_URL=
-
-GEMINI_API_KEY=
-
-BASE_URL=localhost:3000
-```
-
-
-### Running the Project
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
+- [npm](https://www.npmjs.com/)
 
