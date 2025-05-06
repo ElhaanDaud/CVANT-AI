@@ -1,7 +1,5 @@
 <div align="center">
-  <br />
-    <img src="https://i.postimg.cc/xnTr6TCb/ResumeAI.png" alt="Project Banner">
-  <br />
+
   <br />
 
   <div>
