@@ -1,6 +1,5 @@
 <div align="center">
 
-
   <div>
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=393D72" alt="nextjs" />
     <img src="https://img.shields.io/badge/-MongoDB-black?style=for-the-badge&logoColor=white&logo=mongodb&color=1FAD58" alt="mongodb" />
@@ -12,10 +11,10 @@
   <h2 align="center">CVANT AI</h2>
 
   <div align="center">
-     <b>CVANT AI</b> is your one-stop CV enhancer! With AI magic under the hood, it lets you generate, update, and tailor your resume like a pro. Whether you're a fresher or a seasoned professional, this tool helps you put your best foot forward — quickly, securely, and smartly.
+    <b>CVANT AI</b> is your one-stop CV enhancer! With AI magic under the hood, it lets you generate, update, and tailor your resume like a pro. Whether you're a fresher or a seasoned professional, this tool helps you put your best foot forward — quickly, securely, and smartly.
   </div>
-  <br />
-
+  
+</div>
 
 ---
 
@@ -44,7 +43,7 @@
 
 ## 🚀 Quick Start
 
-Follow these steps to run CVANT AI locally on your machine.
+Follow these steps to run **CVANT AI** locally on your machine:
 
 ### Prerequisites
 
@@ -54,3 +53,17 @@ Make sure you have the following installed:
 - [Node.js](https://nodejs.org/en)
 - [npm](https://www.npmjs.com/)
 
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/cvant-ai.git
+
+# Navigate to the project directory
+cd cvant-ai
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
