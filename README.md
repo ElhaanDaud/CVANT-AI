@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 
   <div>
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=393D72" alt="nextjs" />
@@ -15,8 +15,7 @@
      <b>CVANT AI</b> is your one-stop CV enhancer! With AI magic under the hood, it lets you generate, update, and tailor your resume like a pro. Whether you're a fresher or a seasoned professional, this tool helps you put your best foot forward — quickly, securely, and smartly.
   </div>
   <br />
-  <a href=""><strong>➥ Visit CVANT AI App</strong></a>
-</div>
+
 
 ---
 
@@ -55,8 +54,3 @@ Make sure you have the following installed:
 - [Node.js](https://nodejs.org/en)
 - [npm](https://www.npmjs.com/)
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/ElhaanDaud/CVANT-AI.git
-cd CVANT-AI
