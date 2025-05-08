@@ -12,7 +12,7 @@ export async function updateResumeUploadInfo(
     originalName: string;
     size: number;
     mimeType: string;
-  },
+  }
 ) {
   try {
     await connectToDB();
@@ -30,12 +30,14 @@ export async function updateResumeUploadInfo(
       originalName: fileInfo.originalName,
       size: fileInfo.size,
       mimeType: fileInfo.mimeType,
-      uploadDate: new Date(),
+      uploadDate: new Date()
     };
 
     await resume.save();
 
-    return { success: true, data: resume };
+    const plainResume = JSON.parse(JSON.stringify(resume));
+
+    return { success: true, data: plainResume };
   } catch (error: any) {
     console.error(`Failed to update resume upload info: ${error.message}`);
     return { success: false, error: error.message };
@@ -57,7 +59,7 @@ export async function removeUploadedResume(resumeId: string, path: string) {
     await resume.save();
 
     revalidatePath(path);
-
+    
     return { success: true };
   } catch (error: any) {
     console.error(`Failed to remove uploaded resume: ${error.message}`);

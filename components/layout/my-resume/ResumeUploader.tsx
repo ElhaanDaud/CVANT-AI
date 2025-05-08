@@ -10,6 +10,14 @@ import {
   removeUploadedResume,
 } from "@/lib/actions/upload.actions";
 import { usePathname } from "next/navigation";
+import { parseResumeWithGemini } from "@/lib/actions/parse.actions";
+import { useFormContext } from "@/lib/context/FormProvider";
+import {
+  addEducationToResume,
+  addExperienceToResume,
+  addSkillToResume,
+  updateResume,
+} from "@/lib/actions/resume.actions";
 
 export interface UploadedFile {
   fileId: string;
@@ -25,6 +33,7 @@ interface ResumeUploaderProps {
   userId: string;
   existingFile?: UploadedFile;
   onUploadComplete?: (fileInfo: UploadedFile) => void;
+  enableParsing?: boolean;
 }
 
 const ResumeUploader = ({
@@ -32,15 +41,18 @@ const ResumeUploader = ({
   userId,
   existingFile,
   onUploadComplete,
+  enableParsing = true,
 }: ResumeUploaderProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isParsing, setIsParsing] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(
     existingFile || null,
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const pathname = usePathname();
+  const { handleInputChange } = useFormContext();
 
   // Format file size to be human-readable
   const formatFileSize = (bytes: number): string => {
@@ -49,13 +61,147 @@ const ResumeUploader = ({
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
+  const parseResume = async (fileId: string) => {
+    setIsParsing(true);
+
+    try {
+      const parsedData = await parseResumeWithGemini(fileId);
+
+      if (parsedData) {
+        // Update the form with parsed data
+        handleInputChange({
+          target: {
+            name: "firstName",
+            value: parsedData.firstName || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "lastName",
+            value: parsedData.lastName || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "jobTitle",
+            value: parsedData.jobTitle || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "address",
+            value: parsedData.address || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "phone",
+            value: parsedData.phone || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "email",
+            value: parsedData.email || "",
+          },
+        });
+
+        handleInputChange({
+          target: {
+            name: "summary",
+            value: parsedData.summary || "",
+          },
+        });
+
+        // Handle skills, experience, education
+        if (parsedData.skills && parsedData.skills.length > 0) {
+          handleInputChange({
+            target: {
+              name: "skills",
+              value: parsedData.skills,
+            },
+          });
+
+          // Save skills to database
+          await addSkillToResume(resumeId, parsedData.skills);
+        }
+
+        if (parsedData.experience && parsedData.experience.length > 0) {
+          handleInputChange({
+            target: {
+              name: "experience",
+              value: parsedData.experience,
+            },
+          });
+
+          // Save experience to database
+          await addExperienceToResume(resumeId, parsedData.experience);
+        }
+
+        if (parsedData.education && parsedData.education.length > 0) {
+          handleInputChange({
+            target: {
+              name: "education",
+              value: parsedData.education,
+            },
+          });
+
+          // Save education to database
+          await addEducationToResume(resumeId, parsedData.education);
+        }
+
+        // Update basic info in the database
+        await updateResume({
+          resumeId: resumeId,
+          updates: {
+            firstName: parsedData.firstName,
+            lastName: parsedData.lastName,
+            jobTitle: parsedData.jobTitle,
+            address: parsedData.address,
+            phone: parsedData.phone,
+            email: parsedData.email,
+            summary: parsedData.summary,
+          },
+        });
+
+        toast({
+          title: "Resume parsed successfully",
+          description:
+            "Your resume information has been extracted and filled in",
+          className: "bg-white",
+        });
+      } else {
+        toast({
+          title: "Parsing failed",
+          description: "Could not extract information from your resume",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing resume:", error);
+      toast({
+        title: "Parsing failed",
+        description:
+          "There was an error extracting information from your resume",
+        variant: "destructive",
+      });
+    } finally {
+      setIsParsing(false);
+    }
+  };
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type (PDF, DOCX, etc.)
+    // Allowed file types
     const allowedTypes = [
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -89,7 +235,7 @@ const ResumeUploader = ({
 
       // Upload the new file
       const uploadResponse = await uploadFile(file, userId);
-      
+
       // Map the response to match the UploadedFile interface
       const uploadedFileInfo: UploadedFile = {
         fileId: uploadResponse.id,
@@ -97,7 +243,7 @@ const ResumeUploader = ({
         originalName: uploadResponse.originalName,
         size: uploadResponse.size,
         mimeType: uploadResponse.mimeType,
-        uploadDate: new Date()
+        uploadDate: new Date(),
       };
 
       // Update the database
@@ -111,9 +257,12 @@ const ResumeUploader = ({
           className: "bg-white",
         });
 
-        // Notify parent component if needed
         if (onUploadComplete) {
           onUploadComplete(uploadedFileInfo);
+        }
+
+        if (file.type === "application/pdf" && enableParsing) {
+          await parseResume(uploadResponse.id);
         }
       } else {
         toast({
@@ -184,6 +333,7 @@ const ResumeUploader = ({
       </h2>
       <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
         Upload your resume file (PDF or DOCX, max 5MB)
+        {enableParsing && " - PDF resumes will be parsed automatically"}
       </p>
 
       <div className="mt-5">
@@ -201,13 +351,35 @@ const ResumeUploader = ({
               </div>
             </div>
             <div className="flex items-center space-x-2">
+              {/* Show Parse button for PDFs */}
+              {uploadedFile.mimeType === "application/pdf" && enableParsing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-600 hover:text-blue-700"
+                  onClick={() => parseResume(uploadedFile.fileId)}
+                  disabled={isUploading || isDeleting || isParsing}
+                >
+                  {isParsing ? (
+                    <>
+                      <Loader2 size={14} className="mr-2 animate-spin" />{" "}
+                      Parsing...
+                    </>
+                  ) : (
+                    <>
+                      <File size={14} className="mr-2" /> Parse CV
+                    </>
+                  )}
+                </Button>
+              )}
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {
                   if (fileInputRef.current) fileInputRef.current.click();
                 }}
-                disabled={isUploading || isDeleting}
+                disabled={isUploading || isDeleting || isParsing}
               >
                 Replace
               </Button>
@@ -216,7 +388,7 @@ const ResumeUploader = ({
                 size="sm"
                 className="text-red-500 hover:text-red-600"
                 onClick={handleDeleteFile}
-                disabled={isUploading || isDeleting}
+                disabled={isUploading || isDeleting || isParsing}
               >
                 {isDeleting ? (
                   <>
@@ -238,17 +410,21 @@ const ResumeUploader = ({
               accept=".pdf,.docx"
               onChange={handleFileChange}
               className="hidden"
-              disabled={isUploading}
+              disabled={isUploading || isParsing}
             />
             <Button
               variant="outline"
               onClick={() => fileInputRef.current?.click()}
-              disabled={isUploading}
+              disabled={isUploading || isParsing}
               className="flex gap-2"
             >
               {isUploading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" /> Uploading...
+                </>
+              ) : isParsing ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" /> Parsing...
                 </>
               ) : (
                 <>
@@ -258,6 +434,7 @@ const ResumeUploader = ({
             </Button>
             <p className="mt-2 text-xs text-gray-500">
               Click to browse files (PDF or DOCX)
+              {enableParsing && " - PDF resumes will be parsed automatically"}
             </p>
           </div>
         )}
