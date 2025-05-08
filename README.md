@@ -32,12 +32,12 @@
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** Next.js 14  
-- **Authentication:** Clerk  
-- **AI Integration:** Gemini API  
-- **Styling:** TailwindCSS  
-- **Backend:** Node.js  
-- **Database:** MongoDB  
+- **Frontend:** Next.js 14
+- **Authentication:** Clerk
+- **AI Integration:** Gemini API
+- **Styling:** TailwindCSS
+- **Backend:** Node.js
+- **Database:** MongoDB
 
 ---
 
@@ -67,3 +67,4 @@ npm install
 
 # Run the development server
 npm run dev
+```
