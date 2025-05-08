@@ -17,6 +17,14 @@ const resumeSchema = new mongoose.Schema({
   education: [{ type: mongoose.Schema.Types.ObjectId, ref: "Education" }],
   skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Skill" }],
   themeColor: { type: String, default: themeColors[0] },
+  uploadedResume: {
+    fileId: { type: String },
+    fileName: { type: String },
+    originalName: { type: String },
+    size: { type: Number },
+    mimeType: { type: String },
+    uploadDate: { type: Date, default: Date.now },
+  },
 });
 
 const Resume = mongoose.models.Resume || mongoose.model("Resume", resumeSchema);

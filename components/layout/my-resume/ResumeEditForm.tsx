@@ -11,6 +11,7 @@ import ExperienceForm from "./forms/ExperienceForm";
 import EducationForm from "./forms/EducationForm";
 import SkillsForm from "./forms/SkillsForm";
 import ThemeColor from "@/components/layout/ThemeColor";
+import ResumeUploader from "@/components/layout/my-resume/ResumeUploader";
 import { useToast } from "@/components/ui/use-toast";
 import { useFormContext } from "@/lib/context/FormProvider";
 import {
@@ -144,6 +145,13 @@ const ResumeEditForm = ({
             )}
           </Button>
         </div>
+      </div>
+      <div className="mt-5">
+        <ResumeUploader
+          resumeId={params.id}
+          userId={userId}
+          existingFile={formData?.uploadedResume}
+        />
       </div>
       {activeFormIndex === 1 ? (
         <PersonalDetailsForm params={params} />

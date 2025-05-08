@@ -92,6 +92,50 @@ const AddResume = ({ userId }: { userId: string | undefined }) => {
     }
   };
 
+  const handleResumeUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.docx';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file && userId) {
+        setIsLoading(true);
+
+        try {
+          const uuid = uuidv4();
+          const result = await createResume({
+            resumeId: uuid,
+            userId: userId,
+            title: file.name.split('.')[0],
+          });
+
+          if (result.success) {
+            const resume = JSON.parse(result.data!);
+            router.push(`/my-resume/${resume.resumeId}/edit`);
+          } else {
+            toast({
+              title: "Uh Oh! Something went wrong.",
+              description: result?.error,
+              variant: "destructive",
+              className: "bg-white",
+            });
+          }
+        } catch (error) {
+          console.error("Upload error:", error);
+          toast({
+            title: "Upload failed",
+            description: "There was an error uploading your file",
+            variant: "destructive",
+            className: "bg-white",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    input.click();
+  };
+
   return (
     <div
     className="relative p-6 py-12 border border-[#007AFF] flex flex-col justify-center items-center bg-white text-[#007AFF] h-[180px] w-[160px] hover:shadow-lg hover:scale-90 transition-all duration-300 ease-in-out rounded-lg cursor-pointer shadow-lg"
@@ -119,6 +163,7 @@ const AddResume = ({ userId }: { userId: string | undefined }) => {
   
         <Button
           variant="outline"
+          onClick={handleResumeUpload}
           className="cursor-pointer w-[80%] border-2 border-[#007AFF] text-[#007AFF] px-[16px] py-[10px] bg-white hover:bg-blue-50 transition-all rounded-md text-xs font-semibold flex items-center justify-center gap-2"
         >
           <Upload size={14} />
