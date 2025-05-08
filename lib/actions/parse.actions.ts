@@ -47,7 +47,8 @@ export async function parseResumeWithGemini(
     const arrayBuffer = await response.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
-    const prompt = `Extract the following information from this resume and respond with ONLY a valid JSON object - no markdown, no code blocks, no backticks, just the raw JSON:
+    const prompt = `You are a professional resume parser and optimizer. Your task is to extract and enhance structured resume data from raw resume text and return it in a standardized, ATS-friendly JSON format using the following schema:
+     - no markdown, no code blocks, no backticks, just the raw JSON:
 
 {
   "firstName": string,
@@ -80,7 +81,26 @@ export async function parseResumeWithGemini(
   }>
 }
 
-Respond only with the raw JSON, with no explanations, code blocks, or other text.`;
+Enhancement Guidelines:
+
+Normalize and standardize job titles, company names, and degree names.
+
+Use a consistent date format (e.g., "MMM YYYY" or "YYYY-MM").
+
+Enhance the summary with relevant, keyword-rich, professional content tailored for ATS.
+
+Assign skills ratings on a scale from 20 to 100 based on emphasis and relevance.{Very Skilled: 100, Skilled: 80, Average: 60, Basic: 40, No Experience: 20}.Default 60 if no rating is provided.
+by defaulkt, set the rating to 60.
+
+Correct grammar, casing, punctuation, and formatting throughout.
+
+Summarize achievements in experience using quantifiable impact and action verbs.
+
+Remove redundancy and merge overlapping entries where applicable.
+
+Respond ONLY with valid, minified JSON strictly following the schema above. Do not include any explanation or extra text.
+
+`;
 
     const result = await model.generateContent([
       { text: prompt },
