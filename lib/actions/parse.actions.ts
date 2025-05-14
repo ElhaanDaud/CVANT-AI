@@ -89,8 +89,8 @@ Use a consistent date format (e.g., "MMM YYYY" or "YYYY-MM").
 
 Enhance the summary with relevant, keyword-rich, professional content tailored for ATS.
 
-Assign skills ratings on a scale from 20 to 100 based on emphasis and relevance.{Very Skilled: 100, Skilled: 80, Average: 60, Basic: 40, No Experience: 20}.Default 60 if no rating is provided.
-by defaulkt, set the rating to 60.
+Assign skills ratings on a scale from 1 to 5 based on emphasis and relevance.{Very Skilled: 5, Skilled: 4, Average: 3, Basic: 2, No Experience: 1}.Default 1 if no rating is provided.
+
 
 Correct grammar, casing, punctuation, and formatting throughout.
 
