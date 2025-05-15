@@ -57,7 +57,7 @@ Make sure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cvant-ai.git
+git clone https://github.com/ElhaanDaud/CVANT-AI.git
 
 # Navigate to the project directory
 cd cvant-ai
