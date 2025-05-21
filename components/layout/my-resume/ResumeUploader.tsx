@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "../../ui/button";
 import { Textarea } from "../../ui/textarea";
-
+import { Label } from "../../ui/label";
 import { useToast } from "../../ui/use-toast";
 import { Loader2, Upload, File, X } from "lucide-react";
 import { uploadFile, deleteFile } from "@/lib/appwrite";
@@ -64,7 +64,7 @@ const ResumeUploader = ({
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
-
+  const parseResume = async (fileId: string, currentJobDescription?: string) => {
     setIsParsing(true);
 
     try {
@@ -265,7 +265,7 @@ const ResumeUploader = ({
         }
 
         if (file.type === "application/pdf" && enableParsing) {
-          await parseResume(uploadResponse.id, jobDescription);
+          await parseResume(uploadResponse.id);
         }
       } else {
         toast({
@@ -343,25 +343,7 @@ const ResumeUploader = ({
         {enableParsing && " - PDF resumes will be parsed automatically"}
       </p>
 
-      <div className="mt-4">
-        <label
-          htmlFor="jobDescription"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Job Description (Optional)
-        </label>
-        <Textarea
-          id="jobDescription"
-          name="jobDescription"
-          rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-          placeholder="Paste the job description here to tailor the resume parsing..."
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
-        />
-      </div>
-
-      <div className="mt-5 mb-4">
+      <div className="mt-5">
         {uploadedFile ? (
           <div>
             <div className="flex items-center justify-between border border-gray-200 rounded-md p-3">
