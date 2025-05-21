@@ -38,6 +38,7 @@ interface ParsedResume {
 
 export async function parseResumeWithGemini(
   fileId: string,
+  jobDescription: string,
 ): Promise<ParsedResume | null> {
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -47,6 +48,17 @@ export async function parseResumeWithGemini(
     const response = await fetch(fileUrl.toString());
     const arrayBuffer = await response.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
+
+    let jobTitleGuidance: string;
+    let relevanceInstruction: string;
+
+    if (jobDescription && jobDescription.trim() !== "") {
+      jobTitleGuidance = `Based on the following job description, tailor the resume. Job Description: "${jobDescription}". Extract relevant keywords, skills, and experiences from the resume that align with this job description. The job title in the parsed output should reflect the target role described in the job description. Prioritize and list skills relevant to this job description first.`;
+      relevanceInstruction = `Ensure the extracted information and summaries are highly relevant to the provided job description, focusing on ATS-friendly keywords pertinent to that description.`;
+    } else {
+      jobTitleGuidance = `Use the most prominent job title mentioned in the resume to guide parsing. If no clear job title is present, use "Professional" as a default. Prioritize skills and content generally suitable for a professional resume.`;
+      relevanceInstruction = `Ensure the extracted information and summaries are relevant to the identified job title, focusing on common ATS-friendly keywords for that role.`;
+    }
 
     const prompt = `You are a professional resume parser and optimizer. Your task is to extract and enhance structured resume data from raw resume text and return it in a standardized, ATS-friendly JSON format using the following schema:
      - no markdown, no code blocks, no backticks, just the raw JSON:
@@ -84,8 +96,7 @@ export async function parseResumeWithGemini(
 
 Enhancement Guidelines:
 
-Use ML engineer
-  for the Job Title and based on that customise the whole resume based on that priorities the skills that are relevant to the job title first then add the rest of the skills.
+${jobTitleGuidance}
 
 In Experience section give summary in ATS friendly format in 50-100 words.
 
@@ -95,7 +106,7 @@ currentlyWorking should be true if the end date is empty.
 
 startDate and endDate if not mentioned should be left empty.
 
-keep the things in the resume that is relevant to the title ONLY ie depending on the domains and give detailed summary with ATS friendly keywords.
+${relevanceInstruction}
 
 Normalize and standardize job titles, company names, and degree names.
 
