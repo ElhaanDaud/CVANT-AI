@@ -26,7 +26,7 @@ interface ParsedResume {
     workSummary: string;
   }>;
   education: Array<{
-    id: number;
+   id: number;
     universityName: string;
     degree: string;
     major: string;
@@ -80,11 +80,12 @@ export async function parseResumeWithGemini(
     "endDate": string,
     "description": string
   }>
-}
+  }
 
 Enhancement Guidelines:
 
-Use The title given in the pdf for the Job Title and based on that customise the whole resume based on that priorities the skills that are relevant to the job title first then add the rest of the skills.
+Use ML engineer
+  for the Job Title and based on that customise the whole resume based on that priorities the skills that are relevant to the job title first then add the rest of the skills.
 
 In Experience section give summary in ATS friendly format in 50-100 words.
 

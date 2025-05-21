@@ -51,7 +51,7 @@ const EducationForm = ({ params }: { params: { id: string } }) => {
                 description: "",
               },
             ],
-    },
+   },
   });
 
   const { fields, append, remove } = useFieldArray({
