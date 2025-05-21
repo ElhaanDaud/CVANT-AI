@@ -26,7 +26,7 @@ interface ParsedResume {
     workSummary: string;
   }>;
   education: Array<{
-    id: number;
+   id: number;
     universityName: string;
     degree: string;
     major: string;
@@ -38,7 +38,7 @@ interface ParsedResume {
 
 export async function parseResumeWithGemini(
   fileId: string,
-  jobDescription?: string,
+
 ): Promise<ParsedResume | null> {
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -49,7 +49,7 @@ export async function parseResumeWithGemini(
     const arrayBuffer = await response.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
-    let prompt = `You are a professional resume parser and optimizer. Your task is to extract and enhance structured resume data from raw resume text and return it in a standardized, ATS-friendly JSON format using the following schema:
+
      - no markdown, no code blocks, no backticks, just the raw JSON:
 
 {
@@ -81,11 +81,11 @@ export async function parseResumeWithGemini(
     "endDate": string,
     "description": string
   }>
-}
+  }
 
 Enhancement Guidelines:
 
-Use The title given in the pdf for the Job Title and based on that customise the whole resume based on that priorities the skills that are relevant to the job title first then add the rest of the skills.
+${jobTitleGuidance}
 
 In Experience section give summary in ATS friendly format in 50-100 words.
 
@@ -95,7 +95,7 @@ currentlyWorking should be true if the end date is empty.
 
 startDate and endDate if not mentioned should be left empty.
 
-keep the things in the resume that is relevant to the title ONLY ie depending on the domains and give detailed summary with ATS friendly keywords.
+${relevanceInstruction}
 
 Normalize and standardize job titles, company names, and degree names.
 
