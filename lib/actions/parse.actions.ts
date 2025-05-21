@@ -38,6 +38,7 @@ interface ParsedResume {
 
 export async function parseResumeWithGemini(
   fileId: string,
+  jobDescription?: string,
 ): Promise<ParsedResume | null> {
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -48,7 +49,7 @@ export async function parseResumeWithGemini(
     const arrayBuffer = await response.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
-    const prompt = `You are a professional resume parser and optimizer. Your task is to extract and enhance structured resume data from raw resume text and return it in a standardized, ATS-friendly JSON format using the following schema:
+    let prompt = `You are a professional resume parser and optimizer. Your task is to extract and enhance structured resume data from raw resume text and return it in a standardized, ATS-friendly JSON format using the following schema:
      - no markdown, no code blocks, no backticks, just the raw JSON:
 
 {
@@ -108,9 +109,22 @@ Correct grammar, casing, punctuation, and formatting throughout.
 
 Summarize achievements in experience using quantifiable impact and action verbs.
 
-Remove redundancy and merge overlapping entries where applicable.
+Remove redundancy and merge overlapping entries where applicable.`;
 
-Respond ONLY with valid, minified JSON strictly following the schema above. Do not include any explanation or extra text.
+    if (jobDescription) {
+      prompt += `
+
+Additionally, a job description has been provided. Pay special attention to it. Tailor the resume parsing, keyword optimization, and summary enhancement to align with the requirements, skills, and keywords found in this job description:
+---
+JOB DESCRIPTION START
+${jobDescription}
+JOB DESCRIPTION END
+---`;
+    }
+
+    prompt += `
+
+Respond ONLY with valid,minified JSON strictly following the schema above. Do not include any explanation or extra text.
 `;
 
     const result = await model.generateContent([
