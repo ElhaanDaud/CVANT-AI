@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "../../ui/button";
 import { Textarea } from "../../ui/textarea";
+
 import { useToast } from "../../ui/use-toast";
 import { Loader2, Upload, File, X } from "lucide-react";
 import { uploadFile, deleteFile } from "@/lib/appwrite";
@@ -63,7 +64,7 @@ const ResumeUploader = ({
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
-  const parseResume = async (fileId: string, currentJobDescription: string) => {
+
     setIsParsing(true);
 
     try {
@@ -288,6 +289,10 @@ const ResumeUploader = ({
   const handleDeleteFile = async () => {
     if (!uploadedFile) return;
 
+    // Potentially pass jobDescription to parseResume
+    // For now, just logging it or using it within this component
+    console.log("Job Description:", jobDescription);
+
     try {
       setIsDeleting(true);
 
@@ -358,9 +363,10 @@ const ResumeUploader = ({
 
       <div className="mt-5 mb-4">
         {uploadedFile ? (
-          <div className="flex items-center justify-between border border-gray-200 rounded-md p-3">
-            <div className="flex items-center">
-              <File className="h-5 w-5 text-blue-600 mr-2" />
+          <div>
+            <div className="flex items-center justify-between border border-gray-200 rounded-md p-3">
+              <div className="flex items-center">
+                <File className="h-5 w-5 text-blue-600 mr-2" />
               <div>
                 <p className="text-sm font-medium">
                   {uploadedFile.originalName}
@@ -422,6 +428,25 @@ const ResumeUploader = ({
               </Button>
             </div>
           </div>
+          {uploadedFile.mimeType === "application/pdf" && enableParsing && (
+            <div className="mt-4">
+              <Label htmlFor="job-description" className="text-sm font-medium">
+                Job Description (Optional)
+              </Label>
+              <Textarea
+                id="job-description"
+                placeholder="Paste the job description here to improve parsing accuracy..."
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                rows={5}
+              />
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Providing a job description can help tailor the resume parsing.
+              </p>
+            </div>
+          )}
+        </div>
         ) : (
           <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-md h-32 p-4">
             <input
